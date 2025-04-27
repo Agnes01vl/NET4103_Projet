@@ -2,6 +2,65 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import os
 
+#pour le degree distribution:
+import csv 
+import numpy as np
+import pandas as pd
+import networkx as nx
+
+edges_list = []
+with open("../../data/GameOfThrones/stormofswords.csv") as GOT:
+    rows = csv.reader(GOT)
+    next(rows)
+    for row in rows:
+        edges_list.append([row[0], row[1], int(row[2])])
+        
+G = nx.DiGraph()
+G.add_weighted_edges_from(edges_list)
+
+
+## Compute and plot the degree distribution of the graph
+
+def vertexCC(G,v):
+    v_neighbors = G[v]
+    edges = 0.0
+    for i in range(len(v_neighbors)):
+        for j in range(i+1, len(v_neighbors)):
+            if v_neighbors[j] in G[v_neighbors[i]]:
+                edges += 1
+    if edges == 0.0:
+        return 0.0
+    else:
+        return edges / ((len(v_neighbors)**2 - len(v_neighbors))/2)
+
+'''
+Use vertexCC() to calculate the clustering coefficient of the entire graph, 
+which is the average clustering coefficient of its nodes.
+'''
+import numpy as np
+
+def graphCC(G):
+    # YOUR CODE HERE
+    raise NotImplementedError()
+
+## Compute the global clustering coeficient or transitivity
+
+
+def from_dict_to_adj_matrix(G):
+    N = len(G)
+    adj_matrix = np.zeros((N,N))
+    for v in G.keys():
+        for u in G[v]:
+            adj_matrix[u,v] = 1
+    return adj_matrix
+
+def global_clustering(A):
+    # YOUR CODE HERE
+    raise NotImplementedError()
+
+G = {0:[1,2], 1:[0,2], 2:[0,1]}
+A = from_dict_to_adj_matrix(G)
+assert global_clustering(A) == 1.0
 
 if not os.path.exists('degree_distributions'):
     os.makedirs('degree_distributions')
