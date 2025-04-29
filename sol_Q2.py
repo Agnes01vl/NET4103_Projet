@@ -107,10 +107,6 @@ def compute_graph_metrics(G):
     }
     return metrics
 
-import networkx as nx
-import matplotlib.pyplot as plt
-import os
-
 def plot_degree_vs_clustering(G, uni_name, output_dir="degree_clustering_plots"):
     """Generate scatter plot: Degree vs. Local Clustering Coefficient"""
     if not os.path.exists(output_dir):
@@ -126,9 +122,6 @@ def plot_degree_vs_clustering(G, uni_name, output_dir="degree_clustering_plots")
     plt.ylabel("Local Clustering Coefficient", fontsize=12)
     plt.grid(True, linestyle='--', alpha=0.6)
     
-    # Log-scale if needed (uncomment if data spans orders of magnitude)
-    # plt.xscale('log')
-    # plt.yscale('log')
     
     plt.savefig(f"{output_dir}/{uni_name.replace(' ', '_')}_degree_vs_clustering.png", dpi=300, bbox_inches='tight')
     plt.close()
