@@ -112,4 +112,81 @@ MIT et Johns Hopkins ont un clustering plus bas :
 - La distribution des degrés suit-elle une **loi de puissance** ? (Vérifier les plots log-log.)  
 - Les hubs jouent-ils un rôle de **ponts** entre communautés ? (Analyser la centralité intermédiaire.)  
 
-## 2.
+## 3. Analyse de l’assortativité sur les réseaux Facebook100
+
+Nous avons analysé l’assortativité sur 100 réseaux sociaux issus du jeu de données **Facebook100**. L’étude a été menée pour les 5 attributs suivants :
+
+1. **Statut étudiant/enseignant (`student_fac`)**
+2. **Genre (`gender`)**
+3. **Majeure (`major_index`)**
+4. **Dortoir (`dorm`)**
+5. **Degré du sommet (`degree`)**
+
+Chaque attribut a été examiné selon deux types de visualisations :
+
+- **Un diagramme de dispersion (scatter plot)** : montre l’assortativité en fonction de la taille du réseau (avec un axe logarithmique pour le nombre de nœuds), avec une ligne horizontale :
+  - **Rouge** : niveau d’assortativité nulle (`0`)
+
+- **Une courbe de densité (histogramme lissé)** : montre la distribution des valeurs d’assortativité pour les 100 réseaux, avec deux lignes verticales :
+  - **Rouge** : niveau d’assortativité nulle (`0`)
+  - **Bleue** : valeur moyenne de l’assortativité pour l’attribut
+
+
+### 1. Statut étudiant/enseignant (`student_fac`)
+
+![student_fac](assortivity/assortativity_student_fac.png)
+
+- **Assortativité moyenne** : `0.3227`
+- L’assortativité est relativement élevée, indiquant une forte tendance des individus à se connecter avec d'autres du même statut (étudiants entre eux, enseignants entre eux). Cela suggère que les interactions sociales dans les universités sont majoritairement homogènes selon le statut institutionnel.
+- La distribution est concentrée au-dessus de zéro, ce qui montre une homogénéité constante à travers les universités.
+
+---
+
+### 2. Genre (`gender`)
+
+![gender](assortivity/assortativity_gender.png)
+
+- **Assortativité moyenne** : `0.0429`
+- L’assortativité est très faible en moyenne, proche de zéro. Certaines universités présentent même une **assortativité légèrement négative**, jusqu’à -0.10, ce qui signifie que dans ces cas, les connexions sont légèrement plus fréquentes entre genres différents que similaires.
+- La densité maximale atteint environ 11, avec une forte concentration autour de 0, et une pointe de densité à 4.8 pour une assortativité nulle. Cela suggère que, dans la majorité des cas, **le genre n’est pas un facteur structurant fort** dans les relations sociales étudiées.
+
+---
+
+### 3. Majeure (`major_index`)
+
+![major_index](assortivity/assortativity_major_index.png)
+
+- **Assortativité moyenne** : `0.0511`
+- Faible mais toujours positive, ce qui indique une légère tendance à se connecter avec des personnes de la même filière académique.
+- L’histogramme est très concentré autour de 0.042, avec une densité atteignant jusqu’à 35, indiquant une forte homogénéité dans la distribution.
+- La taille du réseau n’a pas d’effet clair sur l’assortativité, bien que les réseaux les plus grands montrent parfois des valeurs plus élevées, absentes chez les plus petits réseaux. Cela pourrait refléter des structures académiques plus différenciées dans les grandes universités.
+
+---
+
+### 4. Dortoir (`dorm`)
+
+![dorm](assortivity/assortativity_dorm.png)
+
+- **Assortativité moyenne** : `0.1751`
+- L’assortativité est modérée et toujours strictement positive, indiquant que les personnes ont tendance à se connecter davantage avec celles de leur propre dortoir.
+- La densité maximale est d’environ 8, avec une forte densité entre 0.1 et 0.25.
+- L’assortativité est relativement stable quel que soit la taille du réseau, suggérant que le lieu de résidence est un **facteur cohérent d’organisation sociale** dans les campus.
+
+---
+
+### 5. Degré du sommet (`degree`)
+
+![degree](assortivity/assortativity_degree.png)
+
+- **Assortativité moyenne** : `0.0626`
+- Faible en moyenne, mais la distribution est **très étalée**, avec des valeurs allant jusqu’à **0.2** et descendant à **-0.1**.
+- La densité maximale est d’environ 9, avec une densité de 6 autour d’une assortativité nulle.
+- **Les petits réseaux** présentent parfois des assortativités négatives, tandis que les **grands réseaux** montrent une plus grande dispersion des valeurs. Cela indique que dans les grandes universités, les profils de connexion sont plus variés en termes de degré ( certains utilisateurs très connectés interagissent avec des utilisateurs peu connectés, et vice-versa) . Ce qui est logique avec le fait que dans une petite université, les étudiants ont plus de chances de se connaître mutuellement, ce qui peut mener à un nombre de connexions similaire entre pairs et donc une assortativité plus homogène. 
+
+
+## 4.
+
+## 5.
+
+## 6.
+
