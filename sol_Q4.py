@@ -5,6 +5,7 @@ import random
 import progressbar
 from itertools import combinations
 import os
+import csv
 
 class LinkPrediction(ABC):
     def __init__(self, graph):
@@ -94,20 +95,11 @@ def get_non_edge_node_pairs(G):
     """Retourne les paires de nœuds non connectés"""
     return [(u, v) for u, v in combinations(G.nodes(), 2) if not G.has_edge(u, v)]
 
-def evaluate_link_predictor(G, fraction=0.1):
-    """
-    Fonction qui évalue les prédicteurs de lien (CommonNeighbors, Jaccard, AdamicAdar)
-    sur un graphe donné, en fonction de la fraction des arêtes supprimées.
 
-    Parameters:
-    -----------
-    graph_path : str
-        Chemin vers le fichier GML du graphe
-    fraction : float
-        Fraction des arêtes à supprimer pour l'évaluation (entre 0 et 1)
+def evaluate_link_predictor(G, graph_path, fraction=0.1, output_csv="Q4_predicttion_f01.csv"):
     """
-
-    
+    Fonction qui évalue les prédicteurs de lien et stocke les résultats dans un CSV.
+    """
     # Suppression aléatoire des arêtes
     G_modified, removed_edges = remove_edges_randomly(G, fraction)
     print(f"Nombre d'arêtes supprimées : {len(removed_edges)}")
@@ -116,20 +108,22 @@ def evaluate_link_predictor(G, fraction=0.1):
     non_edges = get_non_edge_node_pairs(G_modified)
     print("Nombre de paires de nœuds non connectés :", len(non_edges))
 
-    # --- Définir les prédicteurs à tester ---
+    # Définir les prédicteurs
     predictors = {
         "CommonNeighbors": CommonNeighbors(G_modified),
         "Jaccard": Jaccard(G_modified),
         "AdamicAdar": AdamicAdar(G_modified),
     }
 
-    # Test des différents prédicteurs
-    k_values = [50, 100, 200, 300, 400]  # Top-k pour l'évaluation
+    k_values = [50, 100, 200, 300, 400]
+
+    # Liste pour stocker les résultats
+    results = []
 
     for predictor_name, predictor in predictors.items():
         print(f"\nÉvaluation du prédicteur : {predictor_name}")
 
-        # Calcul des scores de prédiction avec barre de progression
+        # Calcul des scores
         scores = []
         bar = progressbar.ProgressBar(max_value=len(non_edges))
         for i, (u, v) in enumerate(non_edges):
@@ -137,11 +131,8 @@ def evaluate_link_predictor(G, fraction=0.1):
             scores.append(((u, v), score))
             bar.update(i)
 
-        # Tri des scores en ordre décroissant
         scores_sorted = sorted(scores, key=lambda x: x[1], reverse=True)
 
-        # Évaluation des performances : top@k, précision@k, rappel@k
-        print("\nÉvaluation des performances :")
         for k in k_values:
             top_k_predicted_edges = [pair for pair, _ in scores_sorted[:k]]
             correct_predictions = set(removed_edges).intersection(set(top_k_predicted_edges))
@@ -153,13 +144,28 @@ def evaluate_link_predictor(G, fraction=0.1):
             precision = tp / (tp + fp) if (tp + fp) > 0 else 0
             recall = tp / (tp + fn) if (tp + fn) > 0 else 0
 
+            results.append([
+                graph_path,
+                predictor_name,
+                k,
+                round(precision, 3),
+                round(recall, 3),
+                len(removed_edges),
+                len(non_edges)
+            ])
+
             print(f"Top@{k}={tp}, Precision@{k}={precision:.3f}, Recall@{k}={recall:.3f}")
 
-# === Exécution du main pour plusieurs graphes ===
-if __name__ == "__main__":
-    # Liste des graphes à tester
-    # Je choisis de modifier le graphe Rice31
+    # Écriture dans le fichier CSV
+    file_exists = os.path.exists(output_csv)
+    with open(output_csv, mode='a', newline='') as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow(["Graph", "Predictor", "K", "Precision", "Recall", "RemovedEdges", "NonConnectedPairs"])
+        writer.writerows(results)
 
+# === Exécution principale ===
+if __name__ == "__main__":
     graph_paths = [
         "data/data/Princeton12.gml",
         "data/data/Caltech36.gml",
@@ -175,19 +181,16 @@ if __name__ == "__main__":
         "data/data/Rice31.gml",
     ]
 
-    for path in graph_paths:
-        if not os.path.exists(path):
-            print(f"❌ Fichier manquant : {path}")
-
-
-    # Fraction des arêtes à supprimer
+    output_csv = "Q4_predicttion_f01.csv"
     fractions = [0.05, 0.1, 0.15, 0.2]
-    fraction=fractions[0]
+    fraction = 0.15
 
-    # Test pour chaque graphe et fraction
     for graph_path in graph_paths:
+        if not os.path.exists(graph_path):
+            print(f"❌ Fichier manquant : {graph_path}")
+            continue
         G = nx.read_gml(graph_path)
         G = G.subgraph(max(nx.connected_components(G), key=len)).copy()
-        print(f"\nÉvaluation sur le graphe : {graph_path} avec une fraction de {fraction} des arêtes supprimées")
-        evaluate_link_predictor(G, fraction)
+        print(f"\nÉvaluation sur le graphe : {graph_path} avec fraction={fraction}")
+        evaluate_link_predictor(G, graph_path, fraction, output_csv=output_csv)
 

@@ -1,0 +1,136 @@
+import torch
+import networkx as nx
+import numpy as np
+import os
+from sklearn.metrics import accuracy_score, mean_absolute_error
+
+def label_propagation(graph, labels, alpha=0.99, max_iter=1000, tol=1e-4):
+    """
+    Algorithme de Label Propagation semi-supervisé (Zhu, 2002)
+    graph : networkx.Graph
+    labels : numpy array de taille [n_nodes], -1 pour les labels manquants
+    """
+    A = nx.adjacency_matrix(graph).todense()
+    A = np.array(A, dtype=float)
+    D = np.diag(np.sum(A, axis=1))
+    
+    # Matrice de transition (normalisation row-wise)
+    D_inv = np.linalg.inv(D)
+    S = D_inv @ A
+
+    n_nodes = A.shape[0]
+    classes = np.unique(labels[labels != -1])
+    n_classes = len(classes)
+
+    # Matrice de label : Y
+    Y = np.zeros((n_nodes, n_classes))
+    for i in range(n_nodes):
+        if labels[i] != -1:
+            Y[i, labels[i]] = 1
+
+    # Propagation : F ← α S F + (1 - α) Y
+    F = torch.tensor(Y, dtype=torch.float32)
+    S = torch.tensor(S, dtype=torch.float32)
+    Y = torch.tensor(Y, dtype=torch.float32)
+
+    for i in range(max_iter):
+        F_new = alpha * S @ F + (1 - alpha) * Y
+        if torch.norm(F_new - F) < tol:
+            break
+        F = F_new
+
+    predictions = torch.argmax(F, axis=1).numpy()
+    return predictions
+
+def remove_labels(labels, fraction, seed=42):
+    """
+    Remplace une fraction des labels par -1 (manquants)
+    """
+    np.random.seed(seed)
+    labels = np.array(labels)
+    n = len(labels)
+    to_remove = np.random.choice(n, size=int(fraction * n), replace=False)
+    labels_missing = labels.copy()
+    labels_missing[to_remove] = -1
+    return labels_missing, to_remove
+
+
+def evaluate_predictions(true_labels, predicted_labels, mask_indices):
+    y_true = true_labels[mask_indices]
+    y_pred = predicted_labels[mask_indices]
+    accuracy = accuracy_score(y_true, y_pred)
+    mae = mean_absolute_error(y_true, y_pred)
+    return accuracy, mae
+
+def extract_valid_attributes(G, required_attrs=['gender', 'major_index', 'dorm']):
+    """
+    Filtrer les nœuds qui contiennent toutes les attributs requis.
+    Retourne un sous-graphe + un dictionnaire des attributs filtrés.
+    """
+    valid_nodes = []
+    attr_dict = {attr: [] for attr in ['gender', 'major', 'dorm']}
+
+    for node, data in G.nodes(data=True):
+        if all(attr in data and data[attr] is not None for attr in required_attrs):
+            valid_nodes.append(node)
+            attr_dict['gender'].append(data['gender'])
+            attr_dict['major'].append(data['major_index'])
+            attr_dict['dorm'].append(data['dorm'])
+
+    # Créer un sous-graphe avec uniquement les nœuds valides
+    G_sub = G.subgraph(valid_nodes).copy()
+    return G_sub, attr_dict
+
+
+if __name__ == "__main__":
+    graph_paths = [
+        "data/data/Princeton12.gml",
+        "data/data/Caltech36.gml",
+        "data/data/Oberlin44.gml",
+        "data/data/Johns Hopkins55.gml",
+        "data/data/Lehigh96.gml",
+        "data/data/Bowdoin47.gml",
+        "data/data/Mich67.gml", 
+        "data/data/Tufts18.gml", 
+        "data/data/Hamilton46.gml", 
+        "data/data/Vassar85.gml", 
+        "data/data/Vermont70.gml",  
+        "data/data/Rice31.gml",
+    ]
+
+    fraction = 0.15
+    attributes_to_test = ['dorm', 'major', 'gender']
+    fractions = [0.1, 0.2, 0.3]
+   
+
+
+    for graph_path in graph_paths:
+        if not os.path.exists(graph_path):
+            print(f"❌ Fichier manquant : {graph_path}")
+            continue
+        G = nx.read_gml(graph_path)
+        G = G.subgraph(max(nx.connected_components(G), key=len)).copy()
+        print(f"\nÉvaluation sur le graphe : {graph_path} avec fraction={fraction}")
+
+        G, attr_dict = extract_valid_attributes(G)  
+
+        # Now attr_dict will contain lists of values for each attribute (gender, major, dorm)
+        print(attr_dict)            
+        results = []
+
+        for attr in attributes_to_test:
+            original_labels = attr_dict[attr]
+            
+            # Map labels to continuous integers for classification
+            unique_vals = np.unique(original_labels)
+            label_map = {val: i for i, val in enumerate(unique_vals)}
+            labels_encoded = np.array([label_map[l] for l in original_labels])
+
+            for frac in fractions:
+                labels_missing, removed_idx = remove_labels(labels_encoded, frac)
+                predicted = label_propagation(G, labels_missing)
+
+                acc, mae = evaluate_predictions(labels_encoded, predicted, removed_idx)
+
+                print(f"{attr.capitalize()} — Missing: {int(frac*100)}% — Accuracy: {acc:.3f} — MAE: {mae:.3f}")
+                results.append([attr, frac, acc, mae])
