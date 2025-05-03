@@ -186,12 +186,9 @@ Chaque attribut a été examiné selon deux types de visualisations :
 
 ## 4. LinkPrediction
 
-Dans cette question, on attend de vous que vous calculiez des algorithmes de prédiction de liens sur un grand nombre de graphes (plus de 10).
 
-### (a) Lire le document [4].
 
-### (b)  Implémentez les métriques de prédiction de liens suivantes : 
-
+### (b) 
 Voir sol_Q4.py où l'on trouve:
 
 - class CommonNeighbors(LinkPrediction):
@@ -203,51 +200,125 @@ Voir sol_Q4.py où l'on trouve:
 - Jaccard,  
 - Adamic/Adar.
  On a annalyser les 12 graphes suivants:
- pour des k différents avec une fractions de 0.5
+- Princeton12.gml,
+- Caltech36.gml,
+- Oberlin44.gml,
+- Johns Hopkins55.gml,
+- Lehigh96.gml,
+- Bowdoin47.gml,
+- Mich67.gml, 
+- Tufts18.gml, 
+- Hamilton46.gml, 
+- Vassar85.gml, 
+- Vermont70.gml,  
+- Rice31.gml,
+
+ Pour des k différents avec une fractions de 0.5
  J'ai stocké les valeurs obtenue dans un fichier csv: Q4_prediction.csv et j'ai annalysé les donné dan sle programme python analyse_Q4_predi_ction.py .
 
- Voici un diagramme moutache qui annalyse la précision: 
- ![moustache](annalyse_link_prediction/Distribution_precision.png)
-
-
- Classement des prédicteurs (en général)
-
-    Common Neighbors et Adamic-Adar sont très proches en termes de performance et assez stables jusqu’à K=300.
-
-    Jaccard a des performances nettement inférieures, surtout pour K faible (où la précision est cruciale).
-
-> Cela confirme que Jaccard est un moins bon prédicteur globalement dans ce contexte.
-
-Variabilité et robustesse
-
-    Les boîtes (IQR) de CommonNeighbors et AdamicAdar sont plus larges pour K faibles, ce qui indique une plus grande variabilité.
-
-    À mesure que K augmente, les prédicteurs semblent se stabiliser autour d’une précision plus faible, mais plus homogène.
-
-> Cela suggère que pour K élevé, les prédicteurs deviennent plus prévisibles, mais moins efficaces.
-
- Voici un diagramme moutache qui annalyse du recall: 
- ![moustache](annalyse_link_prediction/Distribution_recall_sans_outliers.png)
-
- ![densité prédicteur](annalyse_link_prediction/Densité_Recall_Prédicteur.png)
-
-  ![densité prédicteur](annalyse_link_prediction/Densité_Precision_Prédicteur.png)
->analyse 
-
-
- les scores moyens sont:
+Pour synthétiser et annalyser les résultats de ces 12 graphes:
+Voici un tableau récapitulatifs des scores moyens pour chaques prédicteurs:
          Predictor  Precision    Recall
        AdamicAdar   0.468417  0.017650
   CommonNeighbors   0.463250  0.017317
           Jaccard   0.342867  0.015033
-ecart-type par prédicteur
+
+On observe que c'est Jaccard le moins performent de très loin.
+On observe... annalyse moi ça de maniére synthétique clair simple
+
+et des ecart-types:
+
          Predictor  Precision    Recall
        AdamicAdar   0.147414  0.020578
   CommonNeighbors   0.152562  0.020393
           Jaccard   0.099534  0.017450
 
+pareil.
 
-# 5.
+ Voici un diagramme moutache qui annalyse la précision: 
+ ![moustache](annalyse_link_prediction/Distribution_precision.png)
+
+
+On observe que Common Neighbors et Adamic-Adar sont très proches en termes de performance et assez stables pour tout les K.Jaccard a des performances nettement inférieures, surtout pour K faible (où la précision est cruciale).
+
+> Cela confirme que Jaccard est un moins bon prédicteur.
+
+
+Les boîtes (IQR) de CommonNeighbors et AdamicAdar sont plus larges pour K faibles, ce qui indique une plus grande variabilité. À mesure que K augmente, les prédicteurs semblent se stabiliser autour d’une précision plus faible, mais plus homogène. Surtout Jaccard qui est bien plus stable mais pour de moins résultat que les deux autre prédicteurs.
+
+> Cela suggère que pour K élevé, les prédicteurs deviennent plus prévisibles, mais moins efficaces.
+
+ Voici le diagramme moutache qui annalyse du recall: 
+ ![moustache](annalyse_link_prediction/Distribution_recall_sans_outliers.png)
+
+ On obserse ici que les boites sont vraiment toute petite pour k faible et augmente en taille avec la valeur de K.
+ On voit en général que jaccard à des boites plus grandes que Common Neighbors ou Adamicar. Les valeurs sont plus répartie pour lui.
+ Toute les valeurs moyenne augement vec le K celle de Jaccard et toujours plus petite que ces deux voisins.
+
+Et Voici une annalyse de la densité du recall : 
+ ![densité prédicteur](annalyse_link_prediction/Densité_Recall_Prédicteur.png)
+
+Ici pour la sensité du recall pour les trois prédicteirs ils ont à peux prés la même forme avec une densité un peu plus haute pour 
+la densité du 
+  ![densité prédicteur](annalyse_link_prediction/Densité_Precision_Prédicteur.png)
+
+  on voit ici pour jaccar une desité bien plus haute et très différente de celle des deux autre prédicteurs avec unes moyenne bien plus basse du recall et le recall fini à une valeur de 0.7 alors que pour les deux autres : cela va jusqu'à 1.2 !
+
+
+
+## 5.
+
+Pour un petit graphe Caltech à seulement 768 noeuds:
+
+| Fraction enlevée | Dorm  | Major | Gender |
+| ---------------- | ----- | ----- | ------ |
+| 0.10             | 0.347 | 0.262 | 0.425  |
+| 0.20             | 0.325 | 0.267 | 0.435  |
+| 0.30             | 0.334 | 0.261 | 0.429  |
+
+**Tableau 1 : Accuracy de l’algorithme de Label Propagation**
+
+| Fraction enlevée | Dorm  | Major | Gender |
+| ---------------- | ----- | ----- | ------ |
+| 0.10             | 14.99 | 14.34 | 0.578  |
+| 0.20             | 15.12 | 14.47 | 0.576  |
+| 0.30             | 15.11 | 14.31 | 0.579  |
+
+**Tableau 2 : MAE (Mean Absolute Error) du Label Propagation**
+
+
+1. **Gender** :
+
+   * Donne les meilleurs résultats parmi les trois attributs.
+   * L'accuracy reste relativement stable (entre 0.425 et 0.435), même quand on augmente la proportion de données manquantes.
+   * L'erreur MAE est très faible (proche de 0.57), ce qui indique que les classes sont bien préservées même en cas de données absentes.
+
+2. **Dorm** :
+
+   * Affiche une précision plus élevée que "major", mais moins bonne que "gender".
+   * L'accuracy chute légèrement de 0.347 à 0.325 puis se stabilise à 0.334, ce qui peut indiquer que certaines structures communautaires du graphe aident à la prédiction.
+   * L’erreur MAE est plus élevée (≈15), ce qui suggère qu’il y a beaucoup de classes ou que les classes sont déséquilibrées.
+
+3. **Major** :
+
+   * C’est l’attribut le plus difficile à prédire. L’accuracy est faible (\~0.26) et très peu influencée par le taux de données manquantes.
+   * Cela suggère que cet attribut est moins corrélé à la structure du graphe (moins homophilique).
+
+
+Le label propagation est plus efficace pour prédire les attributs fortement **corrélés à la structure du graphe**, comme le **genre**, souvent associé à des clusters clairs (e.g., fraternités/sororités, groupes d’intérêt). En revanche, des attributs comme la spécialisation universitaire (**major**) semblent moins bien structurés dans le graphe, d'où les résultats plus faibles.
+
+Nous pouvons annalyser ce graphe aussi pour un grand nombre de graphes: 
+- Princeton12.gml,
+- Caltech36.gml,
+- Oberlin44.gml,
+- Johns Hopkins55.gml,
+- Lehigh96.gml,
+- Bowdoin47.gml,
+- Mich67.gml, 
+- Tufts18.gml, 
+- Hamilton46.gml, 
+- Vassar85.gml, 
+- Vermont70.gml,  
+- Rice31.gml,
 
 ## 6.
-
