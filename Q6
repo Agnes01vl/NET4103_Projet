@@ -1,0 +1,28 @@
+from sknetwork.clustering import Louvain
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning) 
+import networkx as nx
+import pandas as pd
+
+# 1. extract the largest connected component
+unG = nx.Graph(G)
+largest_cc = max(nx.connected_components(unG), key=len)
+S = G.subgraph(largest_cc).copy()
+node_list = list(S.nodes())
+
+adjacency=nx.adjacency_matrix(S, nodelist=node_list, weight="weight").todense()
+
+pr=nx.pagerank(S)
+louvain=Louvain()
+communities=louvain.fit_predict(adjacency)
+
+# Store the result in the graph
+results = []
+for v in range(len(node_list)):
+    results.append([node_list[v], communities[v], pr[node_list[v]], S.nodes[node_list[v]]["name"]])
+    S.nodes[node_list[v]] ["community"] = communities[v]
+    S.nodes[node_list[v]]["pagerank"] = pr[node_list[v]]
+    
+df = pd.DataFrame(results, columns=["node_id", "community_id", "pagerank", "name"])
+df = df.sort_values("pagerank", ascending=False)
+df.head()

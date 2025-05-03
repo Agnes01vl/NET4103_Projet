@@ -29,9 +29,7 @@ Nous avons calculé les métriques suivantes pour chaque réseau (LCC uniquement
 
 #### Interprétation
 
-> L'un ou l'autre de ces réseaux doit-il être considéré comme peu dense ? Sur la base des informations relatives à la densité et au regroupement, que pouvez-vous dire de la topologie du graphe ?
-
-Oui, tous ces réseaux sont peu denses, particulièrement MIT et Johns Hopkins (densité ≈ 1–2%).
+> Oui, tous ces réseaux sont peu denses, particulièrement MIT et Johns Hopkins (densité ≈ 1–2%). 
 
 Clustering global/local mesure la tendance des voisins d’un sommet à aussi être voisins entre eux, donc la présence de triangles (groupes d'amis mutuels).
 
@@ -39,17 +37,12 @@ Caltech a les meilleurs scores de clustering :
 - Global Clustering : 0.2913 (assez élevé)
 - Mean Local Clustering : 0.4091
 
-➔ Cela suggère que Caltech a une structure fortement communautaire : des petits groupes très connectés, même si globalement le réseau reste peu dense.
-
 MIT et Johns Hopkins ont un clustering plus bas :
 - Environ 0.18–0.19 global, et 0.27 en local.
 
-➔ Cela indique des structures plus "diffuses" : il y a des liens, mais moins de triangles fermés, donc moins de petits groupes très soudés.
+> Cela suggère que Caltech a une structure fortement communautaire : des petits groupes très connectés, même si globalement le réseau reste peu dense. et le MIT et Johns Hopskins sont pus "diffuses" : il y a des liens, mais moins de triangles fermés, donc moins de petits groupes très soudés.
 
 ### (c) diagramme de dispersion
-
-(1 point) Pour chaque réseau, dessinez également un diagramme de dispersion du degré en fonction du coefficient de regroupement local. Sur la base de ces calculs et des précédents, êtes-vous en mesure de tirer des conclusions sur les similitudes ou les différences entre les réseaux d'arbres ? Quelles autres observations pouvez-vous faire ?
-
 
 #### Caltech (avec 762 nœuds dans la LCC)
 ![Caltech Degree Distribution](degree_clustering_plots/Caltech_degree_vs_clustering.png)
@@ -59,6 +52,9 @@ MIT et Johns Hopkins ont un clustering plus bas :
 
 #### Johns Hopkins (qui a 5157 nœuds dans la LCC)
 ![Johns Hopkins Degree Distribution](degree_clustering_plots/Johns_Hopkins_degree_vs_clustering.png)
+
+
+des conclusions sur les similitudes ou les différences entre les réseaux d'arbres ? Quelles autres observations pouvez-vous faire ?
 
 #### **1. Les réseaux sont-ils clairsemés (sparse) ? Que peut-on dire de leur topologie ?**  
 
@@ -184,22 +180,15 @@ Chaque attribut a été examiné selon deux types de visualisations :
 - **Les petits réseaux** présentent parfois des assortativités négatives, tandis que les **grands réseaux** montrent une plus grande dispersion des valeurs. Cela indique que dans les grandes universités, les profils de connexion sont plus variés en termes de degré ( certains utilisateurs très connectés interagissent avec des utilisateurs peu connectés, et vice-versa) . Ce qui est logique avec le fait que dans une petite université, les étudiants ont plus de chances de se connaître mutuellement, ce qui peut mener à un nombre de connexions similaire entre pairs et donc une assortativité plus homogène. 
 
 
-## 4. LinkPrediction
+## 4. Link Prediction 
 
+Dans cette section, nous avons évalué les performances de trois métriques de prédiction de liens sur 12 graphes issus du dataset Facebook100 :
 
+* **Common Neighbors**
+* **Jaccard**
+* **Adamic/Adar**
 
-### (b) 
-Voir sol_Q4.py où l'on trouve:
-
-- class CommonNeighbors(LinkPrediction):
-- class Jaccard(LinkPrediction):
-- class AdamicAdar(LinkPrediction):
-
-#### (d) **(2 points)** Choisissez quelques graphes du dataset Facebook100, exécutez et évaluez les performances de chaque prédicteur de lien, puis **concluez sur l’efficacité** des trois métriques suivantes :  
-- voisins communs,  
-- Jaccard,  
-- Adamic/Adar.
- On a annalyser les 12 graphes suivants:
+On a annalyser les 12 graphes suivants:
 - Princeton12.gml,
 - Caltech36.gml,
 - Oberlin44.gml,
@@ -213,27 +202,75 @@ Voir sol_Q4.py où l'on trouve:
 - Vermont70.gml,  
 - Rice31.gml,
 
- Pour des k différents avec une fractions de 0.5
- J'ai stocké les valeurs obtenue dans un fichier csv: Q4_prediction.csv et j'ai annalysé les donné dan sle programme python analyse_Q4_predi_ction.py .
+Les prédictions ont été réalisées pour plusieurs valeurs de `k`, avec une fraction de test de 0.5. Les résultats sont stockés dans `Q4_prediction.csv` et analysés via le script `analyse_Q4_prediction.py`.
 
-Pour synthétiser et annalyser les résultats de ces 12 graphes:
-Voici un tableau récapitulatifs des scores moyens pour chaques prédicteurs:
-         Predictor  Precision    Recall
-       AdamicAdar   0.468417  0.017650
-  CommonNeighbors   0.463250  0.017317
-          Jaccard   0.342867  0.015033
+### Résultats globaux
 
-On observe que c'est Jaccard le moins performent de très loin.
-On observe... annalyse moi ça de maniére synthétique clair simple
+| Prédicteur      | Précision moyenne | Recall moyen |
+| --------------- | ----------------- | ------------ |
+| AdamicAdar      | **0.468**         | **0.0177**   |
+| CommonNeighbors | 0.463             | 0.0173       |
+| Jaccard         | 0.343             | 0.0150       |
 
-et des ecart-types:
+>  Adamic/Adar est légèrement meilleur, suivi de très près par Common Neighbors. Jaccard, en revanche, montre des performances sensiblement plus faibles, particulièrement en précision.
 
-         Predictor  Precision    Recall
-       AdamicAdar   0.147414  0.020578
-  CommonNeighbors   0.152562  0.020393
-          Jaccard   0.099534  0.017450
+| Prédicteur      | Écart-type Précision | Écart-type Recall |
+| --------------- | -------------------- | ----------------- |
+| AdamicAdar      | 0.147                | 0.021             |
+| CommonNeighbors | 0.153                | 0.020             |
+| Jaccard         | **0.100**            | **0.017**         |
 
-pareil.
+> Jaccard montre des performances plus stables mais plus faibles, tandis qu’Adamic/Adar et Common Neighbors ont des variations plus fortes, mais atteignent de meilleures précisions.
+
+### Diagrammes et interprétations
+
+#### Précision (Boxplot)
+![moustache précision](annalyse_link_prediction/Distribution_precision.png)
+
+* Adamic/Adar et Common Neighbors ont des distributions similaires, bien centrées et relativement étroites.
+* Jaccard présente une précision nettement inférieure, notamment pour les petites valeurs de k (où la précision est cruciale).
+
+> Pour des petits k, Adamic/Adar et Common Neighbors sont préférables.
+
+#### Recall (Boxplot)
+![moustache recall](annalyse_link_prediction/Distribution_recall_sans_outliers.png)
+
+* Le recall augmente globalement avec k, pour tous les prédicteurs et Les boîtes s’élargissent avec k, traduisant une variabilité croissante.
+* Jaccard montre une plus grande dispersion, sans compenser par une meilleure performance.
+
+> L’augmentation du recall avec k est attendue, mais elle n’est pas suffisante pour compenser la faiblesse du prédicteur Jaccard.
+
+#### Densité – Rappel
+![densité recall](annalyse_link_prediction/Densité_Recall_Prédicteur.png)
+
+* Les trois prédicteurs montrent une forme de distribution similaire.
+* Adamic/Adar et Common Neighbors ont une densité légèrement plus concentrée autour de meilleurs scores.
+
+#### Densité – Précision
+![densité précision](annalyse_link_prediction/Densité_Precision_Prédicteur.png)
+
+* La densité de **Jaccard** est fortement concentrée autour de **valeurs basses**, ce qui confirme ses faibles performances.
+* Adamic/Adar et Common Neighbors présentent une **plus large gamme de précision**, incluant des scores plus élevés (jusqu’à 1.2), signe de meilleures prédictions ponctuelles.
+
+---
+
+>* **Adamic/Adar** et **Common Neighbors** sont **globalement comparables**, avec un léger avantage pour Adamic/Adar.
+>* **Jaccard** est **nettement moins performant**, bien qu’un peu plus stable.
+>* Pour de **petits `k`**, la **précision** est cruciale : Adamic/Adar est ici le plus fiable.
+>* À mesure que `k` augmente, les trois prédicteurs gagnent en stabilité, mais leurs performances relatives restent constantes.
+
+## 4. LinkPrediction
+
+
+
+### (b) 
+Voir sol_Q4.py où l'on trouve:
+
+- class CommonNeighbors(LinkPrediction):
+- class Jaccard(LinkPrediction):
+- class AdamicAdar(LinkPrediction):
+
+
 
  Voici un diagramme moutache qui annalyse la précision: 
  ![moustache](annalyse_link_prediction/Distribution_precision.png)
@@ -260,15 +297,15 @@ Et Voici une annalyse de la densité du recall :
 
 Ici pour la sensité du recall pour les trois prédicteirs ils ont à peux prés la même forme avec une densité un peu plus haute pour 
 la densité du 
-  ![densité prédicteur](annalyse_link_prediction/Densité_Precision_Prédicteur.png)
+![densité prédicteur](annalyse_link_prediction/Densité_Precision_Prédicteur.png)
 
   on voit ici pour jaccar une desité bien plus haute et très différente de celle des deux autre prédicteurs avec unes moyenne bien plus basse du recall et le recall fini à une valeur de 0.7 alors que pour les deux autres : cela va jusqu'à 1.2 !
 
 
 
-## 5.
+## 5. Label Propagation
 
-Pour un petit graphe Caltech à seulement 768 noeuds:
+On a commencer par annalyser un petit graphe:Caltech à seulement 768 noeuds.
 
 | Fraction enlevée | Dorm  | Major | Gender |
 | ---------------- | ----- | ----- | ------ |
@@ -288,20 +325,17 @@ Pour un petit graphe Caltech à seulement 768 noeuds:
 
 
 1. **Gender** :
-
-   * Donne les meilleurs résultats parmi les trois attributs.
+  - Donne les meilleurs résultats parmi les trois attributs.
    * L'accuracy reste relativement stable (entre 0.425 et 0.435), même quand on augmente la proportion de données manquantes.
    * L'erreur MAE est très faible (proche de 0.57), ce qui indique que les classes sont bien préservées même en cas de données absentes.
 
 2. **Dorm** :
-
-   * Affiche une précision plus élevée que "major", mais moins bonne que "gender".
+  - Affiche une précision plus élevée que "major", mais moins bonne que "gender".
    * L'accuracy chute légèrement de 0.347 à 0.325 puis se stabilise à 0.334, ce qui peut indiquer que certaines structures communautaires du graphe aident à la prédiction.
    * L’erreur MAE est plus élevée (≈15), ce qui suggère qu’il y a beaucoup de classes ou que les classes sont déséquilibrées.
 
 3. **Major** :
-
-   * C’est l’attribut le plus difficile à prédire. L’accuracy est faible (\~0.26) et très peu influencée par le taux de données manquantes.
+  - C’est l’attribut le plus difficile à prédire. L’accuracy est faible (\~0.26) et très peu influencée par le taux de données manquantes.
    * Cela suggère que cet attribut est moins corrélé à la structure du graphe (moins homophilique).
 
 
@@ -321,4 +355,38 @@ Nous pouvons annalyser ce graphe aussi pour un grand nombre de graphes:
 - Vermont70.gml,  
 - Rice31.gml,
 
-## 6.
+### 1. Graphique du MAE par attribut et fraction de labels supprimés 
+![MAEattribut](analyse_label_propagation/boxplot_mae_par_attribut.png)
+
+Ce graphique montre la **distribution du MAE** (erreur absolue moyenne) pour trois attributs (`dorm`, `major`, `gender`) à différents niveaux de suppression de labels (`0.1`, `0.2`, `0.3`).On constate que:
+
+  - **`major`** a des MAE très élevés, de l’ordre de 10 à plus de 40, ce qui suggère qu’il est beaucoup plus difficile à prédire correctement (boite très large), même avec peu de labels manquants.
+  - **`dorm`** a des MAE intermédiaires, généralement entre 2 et 17.
+  - **`gender`** est très bas (MAE proche de 0), ce qui est logique car c’est un attribut binaire (fille garçon): la prédiction est plus facile.
+
+### 2. Graphique de l’Accuracy par attribut et fraction de labels supprimés 
+![MAEattribut](analyse_label_propagation/boxplot_accuracy_par_attribut.png)
+
+
+Ce graphique représente la **précision de la prédiction** (accuracy) pour les mêmes attributs et fractions de suppression. On constate que:
+
+  - **`gender`** a les meilleurs résultats (entre \~0.45 et 0.7), ce qui renforce l'idée qu’il est plus facile à prédire.
+  - **`dorm`** est moyen (\~0.3 à 0.5), ce qui est cohérent avec ses MAE modérés.
+  - **`major`** est difficile à prédire (accuracy \~0.1 à 0.3).
+On observe aussi un comportement assez stable dans ce graphe. Les performances se dégradent peu entre les niveaux 0.1, 0.2 et 0.3, surtout pour `gender`, ce qui indique une **robustesse à la suppression** des labels pour cet attribut.
+
+
+### 3. Visualisation de la densité de l'Accuracy
+![Densité Accuracy](analyse_label_propagation/densite_accuracy_par_attribut_moyenne.png)
+
+Le graphique ci-dessus montre la densité de l’accuracy pour chaque attribut (`dorm`, `gender`, `major`) avec les lignes pointillées indiquant la moyenne :
+
+* La courbe bleue (`gender`) est centrée autour de 0.51, ce qui confirme qu’il est globalement bien prédit.
+* La courbe verte (`dorm`) est centrée autour de 0.35, avec une répartition plus large.
+* La courbe orange (`major`) est concentrée autour de 0.17, avec une distribution très basse, confirmant une performance médiocre.
+
+> Ce graphe souligne visuellement que plus l’attribut est simple (moins de classes, mieux défini), meilleures sont les performances.
+
+###
+> Finalement le plus facile à prédir est le  `gender` ensuite `dorm` et finalement `major` est le plus difficile. de plus on peut dire que `gender` n’ait que 2 classes, `dorm` un nombre modéré, et `major` un très grand nombre, expliquant ces différences.
+
