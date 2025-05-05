@@ -3,7 +3,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns  # Ajoute ceci en haut si ce n'est pas encore fait
+import seaborn as sns 
 
 
 def compute_assortativity_taille(G, attribute):
@@ -71,7 +71,7 @@ def plot_assortativity(data, attributes, output_dir='assortivity'):
         os.makedirs(output_dir)
 
     for attr in attributes:
-        valid_data = data[attr]['assortativity'].dropna()  # Évite les NaN
+        valid_data = data[attr]['assortativity'].dropna()  
 
         if not valid_data.empty:
             print("[INFO]: on continue tout va bien")
@@ -111,7 +111,7 @@ def plot_assortativity(data, attributes, output_dir='assortivity'):
         plt.savefig(plot_file, dpi=300, bbox_inches='tight')
         plt.show()
         plt.close()
-        print(f"[INFO] Graphiques sauvegardés : {plot_file}")
+        print(f"Graphiques sauvegardés : {plot_file}")
 
 def main():
     data_dir = '/home/agnes/NET4103/Projet/NET4103_Projet/data/data'

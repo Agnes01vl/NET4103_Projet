@@ -7,8 +7,7 @@ output_dir='annalyse_link_prediction'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# Charger le CSV
-df = pd.read_csv('Q4_prediction.csv')  # Ne pas filtrer sur un graphe spécifique
+df = pd.read_csv('Q4_prediction.csv')  
 
 #############################Important
 plt.figure(figsize=(14, 6))
@@ -43,9 +42,6 @@ print(mean_scores)
 std_scores = df.groupby('Predictor')[['Precision', 'Recall']].std().reset_index()
 print("ecart-type par prédicteur")
 print(std_scores)
-
-#peux tu me faire un histogramme lisse de la densité de la précision et du recall pour les 3 prédictor avec un axe qui montre la moyenne
-
 df = pd.read_csv('Q4_prediction.csv')  # sans filtrage
 
 # Regroupe globalement

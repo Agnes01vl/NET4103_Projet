@@ -116,14 +116,11 @@ def evaluate_link_predictor(G, graph_path, fraction=0.1, output_csv="Q4_predictt
     }
 
     k_values = [50, 100, 200, 300, 400]
-
-    # Liste pour stocker les résultats
     results = []
 
     for predictor_name, predictor in predictors.items():
         print(f"\nÉvaluation du prédicteur : {predictor_name}")
 
-        # Calcul des scores
         scores = []
         bar = progressbar.ProgressBar(max_value=len(non_edges))
         for i, (u, v) in enumerate(non_edges):
@@ -164,7 +161,6 @@ def evaluate_link_predictor(G, graph_path, fraction=0.1, output_csv="Q4_predictt
             writer.writerow(["Graph", "Predictor", "K", "Precision", "Recall", "RemovedEdges", "NonConnectedPairs"])
         writer.writerows(results)
 
-# === Exécution principale ===
 if __name__ == "__main__":
     graph_paths = [
         "data/data/Princeton12.gml",
@@ -187,7 +183,7 @@ if __name__ == "__main__":
 
     for graph_path in graph_paths:
         if not os.path.exists(graph_path):
-            print(f"❌ Fichier manquant : {graph_path}")
+            print(f"Fichier manquant : {graph_path}")
             continue
         G = nx.read_gml(graph_path)
         G = G.subgraph(max(nx.connected_components(G), key=len)).copy()

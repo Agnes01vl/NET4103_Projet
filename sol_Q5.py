@@ -82,11 +82,6 @@ def extract_valid_attributes(G, required_attrs=['gender', 'major_index', 'dorm']
     G_sub = G.subgraph(valid_nodes).copy()
     return G_sub, attr_dict
 
-import os
-import csv
-import networkx as nx
-import numpy as np
-
 def extract_valid_attributes(G, required_attrs=['gender', 'major_index', 'dorm']):
     valid_nodes = []
     attr_dict = {attr: [] for attr in ['gender', 'major', 'dorm']}
@@ -99,7 +94,6 @@ def extract_valid_attributes(G, required_attrs=['gender', 'major_index', 'dorm']
     G_sub = G.subgraph(valid_nodes).copy()
     return G_sub, attr_dict
 
-# === MAIN ===
 if __name__ == "__main__":
     graph_paths = [
         "data/data/Princeton12.gml",

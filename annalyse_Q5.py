@@ -8,7 +8,7 @@ output_dir = 'analyse_label_propagation'
 os.makedirs(output_dir, exist_ok=True)
 
 # Charger les résultats
-df = pd.read_csv('resultat_summary.csv')
+df = pd.read_csv('Q5_resultat_summary.csv')
 
 # Afficher les colonnes disponibles
 print("Colonnes du fichier :", df.columns)

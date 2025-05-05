@@ -14,8 +14,17 @@ Le plus petit réseau (Caltech) a 762 nœuds dans la plus grande composante conn
 #### Johns Hopkins (qui a 5157 nœuds dans la LCC)
 ![Johns Hopkins Degree Distribution](degree_distributions/Johns_Hopkins_degree_dist.png)
 
-> What are you able to conclude from these
-degree distributions?
+
+* On voit pour Caltech que la distribution décroît plus lentement que pour les deux autre graphes, cela indique qu’un petit nombre de nœuds ont un nombre très élevé de connexions — ce sont des **hubs**.
+
+* **MIT et John Hopkins** montrent une distribution plus serrée, ce qui montre une communauté plus **dense et homogène**.
+* **MIT (6402 nœuds)** montrent une plus grande dispersion avec des **super-connecteurs** (étudiants très populaires).
+
+
+> Certains campus ont des structures plus hiérarchiques ou centralisées (avec des hubs), d'autres sont plus égalitaires.
+> **Petits réseaux = densité plus forte possible** : Dans  Caltech, les gens sont plus susceptibles d’être connectés entre eux.
+> **Grand réseau = plus de variation** : Des hubs émergent, les différences de degré deviennent plus marquées. DAns MIT on voit très bien ce détachement.
+
 
 ### (b) Coefficients de clustering et densité
 
@@ -54,69 +63,32 @@ MIT et Johns Hopkins ont un clustering plus bas :
 ![Johns Hopkins Degree Distribution](degree_clustering_plots/Johns_Hopkins_degree_vs_clustering.png)
 
 
-des conclusions sur les similitudes ou les différences entre les réseaux d'arbres ? Quelles autres observations pouvez-vous faire ?
+Les trois graphes présentent une forme similaire : une distribution des degrés suivant une loi de puissance, avec quelques hubs très connectés et une majorité de nœuds faiblement connectés.
 
-#### **1. Les réseaux sont-ils clairsemés (sparse) ? Que peut-on dire de leur topologie ?**  
+Pour les faibles degrés, on observe une forte variabilité du coefficient de clustering local. En revanche, à mesure que le degré augmente, les points tendent à se regrouper autour du coefficient de clustering global, indiquant une centralisation progressive.
 
-✅ **Tous les réseaux sont extrêmement clairsemés** :  
-- **Densité** très faible (Caltech : 0.057, MIT : 0.012, Johns Hopkins : 0.014), ce qui est typique des grands réseaux réels (ex : Facebook a une densité ~10⁻⁶).  
-- **Preuve de parcimonie** : La densité diminue avec la taille du réseau (MIT/JHU plus grands → densité plus faible).  
+- Les réseaux du MIT et de Johns Hopkins affichent des degrés moyens plus élevés, ce qui suggère la présence de plus de hubs que dans le réseau de Caltech.
 
-#### **Caractéristiques topologiques**  
-| Métrique               | Caltech       | MIT           | Johns Hopkins |  
-|------------------------|---------------|---------------|---------------|  
-| **Densité**            | 0.057         | 0.012         | 0.014         |  
-| **Degré moyen**        | 43.7          | 78.5          | 72.4          |  
-| **Clustering local**   | 0.409         | 0.272         | 0.269         |  
-| **Clustering global**  | 0.291         | 0.180         | 0.193         |  
+Concernant la densité des points :
+  * Pour Caltech, la densité est relativement faible mais assez bien répartie sur l’ensemble des degrés.
 
-- **Propriété "petit monde"** (small-world) :  
-  - **Clustering élevé** (≫ réseaux aléatoires) + **chemins courts** (typique des réseaux sociaux).  
-  - Caltech est le plus marqué (clustering le plus fort).  
-- **Tendance "scale-free"** :  
-  - Distribution des degrés probablement en loi de puissance (quelques hubs, beaucoup de nœuds peu connectés).  
-  - MIT/JHU ont des degrés moyens plus élevés → plus de hubs.  
+  * Pour Johns Hopkins, la densité est très concentrée pour les degrés entre 0 et 200, puis la répartition devient beaucoup plus éparse. Seuls deux nœuds ont un degré supérieur à 800, ce qui en fait de véritables super-hubs.
 
-**Implications** :  
-- La **faible densité** permet une structure économe en liens.  
-- Le **clustering élevé** favorise la diffusion d’information dans des communautés soudées.  
+> Malgré sa petite taille, le réseau de Caltech montre une densité plus élevée que ceux de MIT et JHU, ce qui reflète une sociabilité plus concentrée — probablement liée à un environnement plus restreint et cohésif, typique d’un petit campus.
 
----
+> Le réseau du MIT se distingue par un degré moyen plus élevé mais un clustering plus faible, suggérant un réseautage plus large et dispersé (comme on peut l'attendre d’un grand campus, avec des cours de masse et des collaborations interdisciplinaires).
 
-#### **2. Comparaison des réseaux et observations**  
 
-#### **Similitudes**  
-- **Propriétés universelles** :  
-  - Tous sont **clairsemés**, **petits mondes**, et montrent une **corrélation négative** entre degré et clustering.  
-  - Architecture typique des réseaux sociaux réels.  
-
-#### **Différences clés**  
-| Aspect                | Caltech              | MIT                  | Johns Hopkins        |  
-|-----------------------|----------------------|----------------------|----------------------|  
-| **Structure communautaire** | Plus forte (clustering élevé) | Plus faible (liens "ponts") | Intermédiaire |  
-| **Centralisation**    | Moins hiérarchique   | Plus de hubs         | Hubs modérés         |  
-| **Taille**           | Petit (762 nœuds)    | Grand (6402 nœuds)   | Moyen (5157 nœuds)   |  
-
-#### **Observations notables**  
-- **Anomalie de Caltech** :  
-  - Densité plus élevée que MIT/JHU malgré sa petite taille → **sociabilité très concentrée** (ex : campus petit, interactions fréquentes).  
-- **MIT vs. Johns Hopkins** :  
-  - MIT a un **degré moyen plus élevé** mais un **clustering plus faible** → réseautage plus large (ex : cours massifs, collaborations interdisciplinaires).  
-  - Johns Hopkins est un compromis entre Caltech et MIT.  
-
-#### **Questions complémentaires**  
-- La distribution des degrés suit-elle une **loi de puissance** ? (Vérifier les plots log-log.)  
-- Les hubs jouent-ils un rôle de **ponts** entre communautés ? (Analyser la centralité intermédiaire.)  
-
+   
 ## 3. Analyse de l’assortativité sur les réseaux Facebook100
 
-Nous avons analysé l’assortativité sur 100 réseaux sociaux issus du jeu de données **Facebook100**. L’étude a été menée pour les 5 attributs suivants :
+Nous avons analysé l’assortativité sur 100 réseaux sociaux issus du jeu de données Facebook100. L’étude a été menée pour les 5 attributs suivants :
 
-1. **Statut étudiant/enseignant (`student_fac`)**
-2. **Genre (`gender`)**
-3. **Majeure (`major_index`)**
-4. **Dortoir (`dorm`)**
-5. **Degré du sommet (`degree`)**
+1. **`student_fac`**
+2. **`gender`**
+3. **`major_index`**
+4. **`dorm`**
+5. **`degree`**
 
 Chaque attribut a été examiné selon deux types de visualisations :
 
@@ -144,7 +116,7 @@ Chaque attribut a été examiné selon deux types de visualisations :
 
 - **Assortativité moyenne** : `0.0429`
 - L’assortativité est très faible en moyenne, proche de zéro. Certaines universités présentent même une **assortativité légèrement négative**, jusqu’à -0.10, ce qui signifie que dans ces cas, les connexions sont légèrement plus fréquentes entre genres différents que similaires.
-- La densité maximale atteint environ 11, avec une forte concentration autour de 0, et une pointe de densité à 4.8 pour une assortativité nulle. Cela suggère que, dans la majorité des cas, **le genre n’est pas un facteur structurant fort** dans les relations sociales étudiées.
+- La densité maximale atteint environ 11, avec une forte concentration autour de 0, et une pointe de densité à 4.8 pour une assortativité nulle. Cela suggère que, dans la majorité des cas, le genre n’est pas un facteur structurant fort dans les relations sociales étudiées.
 
 ---
 
@@ -175,7 +147,7 @@ Chaque attribut a été examiné selon deux types de visualisations :
 ![degree](assortivity/assortativity_degree.png)
 
 - **Assortativité moyenne** : `0.0626`
-- Faible en moyenne, mais la distribution est **très étalée**, avec des valeurs allant jusqu’à **0.2** et descendant à **-0.1**.
+- Faible en moyenne, mais la distribution est **très étalée**, avec des valeurs allant jusqu’à 0.2 et descendant à -0.1.
 - La densité maximale est d’environ 9, avec une densité de 6 autour d’une assortativité nulle.
 - **Les petits réseaux** présentent parfois des assortativités négatives, tandis que les **grands réseaux** montrent une plus grande dispersion des valeurs. Cela indique que dans les grandes universités, les profils de connexion sont plus variés en termes de degré ( certains utilisateurs très connectés interagissent avec des utilisateurs peu connectés, et vice-versa) . Ce qui est logique avec le fait que dans une petite université, les étudiants ont plus de chances de se connaître mutuellement, ce qui peut mener à un nombre de connexions similaire entre pairs et donc une assortativité plus homogène. 
 
@@ -261,16 +233,26 @@ Les prédictions ont été réalisées pour plusieurs valeurs de `k`, avec une f
 
 ## 4. LinkPrediction
 
+Nous pouvons annalyser l'algorithme de linkPrediction pour un grand nombre de graphes (12): 
+- Princeton12.gml,
+- Caltech36.gml,
+- Oberlin44.gml,
+- Johns Hopkins55.gml,
+- Lehigh96.gml,
+- Bowdoin47.gml,
+- Mich67.gml, 
+- Tufts18.gml, 
+- Hamilton46.gml, 
+- Vassar85.gml, 
+- Vermont70.gml,  
+- Rice31.gml,
 
-
-### (b) 
 Voir sol_Q4.py où l'on trouve:
-
 - class CommonNeighbors(LinkPrediction):
 - class Jaccard(LinkPrediction):
 - class AdamicAdar(LinkPrediction):
 
-
+J'ai stocké les valeurs obtenue dans un fichier csv: Q4_prediction.csv et j'ai annalysé les donné dan sle programme python analyse_Q4_predi_ction.py 
 
  Voici un diagramme moutache qui annalyse la précision: 
  ![moustache](annalyse_link_prediction/Distribution_precision.png)
@@ -279,7 +261,6 @@ Voir sol_Q4.py où l'on trouve:
 On observe que Common Neighbors et Adamic-Adar sont très proches en termes de performance et assez stables pour tout les K.Jaccard a des performances nettement inférieures, surtout pour K faible (où la précision est cruciale).
 
 > Cela confirme que Jaccard est un moins bon prédicteur.
-
 
 Les boîtes (IQR) de CommonNeighbors et AdamicAdar sont plus larges pour K faibles, ce qui indique une plus grande variabilité. À mesure que K augmente, les prédicteurs semblent se stabiliser autour d’une précision plus faible, mais plus homogène. Surtout Jaccard qui est bien plus stable mais pour de moins résultat que les deux autre prédicteurs.
 
@@ -299,13 +280,16 @@ Ici pour la sensité du recall pour les trois prédicteirs ils ont à peux prés
 la densité du 
 ![densité prédicteur](annalyse_link_prediction/Densité_Precision_Prédicteur.png)
 
-  on voit ici pour jaccar une desité bien plus haute et très différente de celle des deux autre prédicteurs avec unes moyenne bien plus basse du recall et le recall fini à une valeur de 0.7 alors que pour les deux autres : cela va jusqu'à 1.2 !
+> On voit ici pour jaccar une desité bien plus haute et très différente de celle des deux autre prédicteurs avec unes moyenne bien plus basse du recall et le recall fini à une valeur de 0.7 alors que pour les deux autres : cela va jusqu'à 1.2 !
 
 
 
 ## 5. Label Propagation
 
-On a commencer par annalyser un petit graphe:Caltech à seulement 768 noeuds.
+Nous avons utilisé l’algorithme de **Zhu** car il est conçu pour tirer parti de labels partiellement connus afin de prédire les étiquettes manquantes, ce qui correspond exactement à la tâche posée dans la question 5.
+En revanche, LPA n’est pas conçu pour ce type de tâche mais pour la détection de communautés, et ne peut pas directement être utilisé pour classifier des attributs connus.
+
+On a commencer par annalyser un petit graphe: Caltech à seulement 768 noeuds.
 
 | Fraction enlevée | Dorm  | Major | Gender |
 | ---------------- | ----- | ----- | ------ |
@@ -355,6 +339,8 @@ Nous pouvons annalyser ce graphe aussi pour un grand nombre de graphes:
 - Vermont70.gml,  
 - Rice31.gml,
 
+J'ai stocké les valeurs obtenue dans un fichier csv: resultat_summary.csv et j'ai annalysé les donné dan sle programme python analyse_Q5.py 
+
 ### 1. Graphique du MAE par attribut et fraction de labels supprimés 
 ![MAEattribut](analyse_label_propagation/boxplot_mae_par_attribut.png)
 
@@ -387,6 +373,117 @@ Le graphique ci-dessus montre la densité de l’accuracy pour chaque attribut (
 
 > Ce graphe souligne visuellement que plus l’attribut est simple (moins de classes, mieux défini), meilleures sont les performances.
 
+
+### **Résultats des Métriques (Moyennes)**
+
+| **Predictor**         | **Precision** | **Recall** |
+|-----------------------|--------------|------------|
+| **Adamic-Adar**       | 0.468        | 0.0176     |
+| **Common Neighbors**  | 0.463        | 0.0173     |
+| **Jaccard**          | 0.343        | 0.0150     |
+
+
+| **Predictor**         | **Precision (σ)** | **Recall (σ)** |
+|-----------------------|------------------|---------------|
+| **Adamic-Adar**       | 0.147            | 0.0206        |
+| **Common Neighbors**  | 0.153            | 0.0204        |
+| **Jaccard**          | 0.100            | 0.0175        |
+
+
+
+- **Adamic-Adar** et **Common Neighbors** obtiennent des précisions similaires (~0.46), légèrement supérieures à Jaccard (0.34).
+- **Le rappel (Recall) est très faible pour tous les prédicteurs (~0.017), ce qui suggère que les algorithmes ont du mal à identifier tous les liens manquants possibles.
+
+- **Adamic-Adar** et **Common Neighbors** ont une plus grande variabilité en précision (écart-type ~0.15) que Jaccard (~0.10).
+- **Le rappel est stable** pour les trois méthodes (écart-type ~0.02), ce qui indique une cohérence dans leur capacité à détecter les vrais positifs.
+
+
 ###
 > Finalement le plus facile à prédir est le  `gender` ensuite `dorm` et finalement `major` est le plus difficile. de plus on peut dire que `gender` n’ait que 2 classes, `dorm` un nombre modéré, et `major` un très grand nombre, expliquant ces différences.
 
+Choix final dépend des besoins :  
+- **Précision maximale** → **Adamic-Adar**  
+- **Stabilité** → **Jaccard**  
+- **Compromis** → **Common Neighbors**  
+
+
+## **6. Détection de communautés dans FB100**  
+
+>**Question** 
+"Dans les réseaux sociaux universitaires de FB100, quels attributs sociodémographiques (année, genre, dortoir, spécialisation académique) influencent le plus la formation des communautés ?"
+
+Hypothèse associée :
+
+    Les communautés détectées dans les réseaux FB100 sont principalement structurées par des facteurs d’homophilie, en particulier l’année d’entrée à l’université, le genre, et les résidences étudiantes. On suppose que les étudiants ayant des caractéristiques similaires (même promotion, même dortoir, même genre, voire même spécialisation académique) ont plus de probabilité de se regrouper dans la même communauté.
+
+## Attributs dominants par communauté - Caltech
+
+![Louvain](Caltech_Louvaincommunity.png)
+
+| Communauté | student_fac       | gender           | major_index       | dorm             | year             |
+|------------|-------------------|------------------|-------------------|------------------|------------------|
+| 0          | **1 (123)**        | 2 (104)           | 202 (16)           | 171 (62)          | 2008 (52)         |
+| 1          | 1 (85)             | 2 (78)            | 228 (18)           | 172 (84)          | 2007 (27)         |
+| 2          | 1 (88)             | 2 (68)            | 208 (19)           | **169 (93)**       | 2006 (32)         |
+| 3          | 1 (66)             | **2 (70)**         | 0 (15)             | 170 (69)          | 0 (22)            |
+| 4          | 1 (67)             | 2 (45)            | 228 (15)           | **166 (67)**       | 2008 (23)         |
+| 5          | **1 (68)**         | 2 (50)            | 199 (10)           | **168 (62)**       | 2008 (24)         |
+| 6          | 1 (37)             | **2 (45)**         | 208 (13)           | 0 (34)            | 0 (25)            |
+| 7          | **1 (16)**         | 2 (12)            | 222 (5)            | 0 (10)            | **2009 (13)**      |
+
+
+Ce tableau a été obtenu à l’aide de l’algorithme de détection de communautés **Louvain**, appliqué sur le graphe Caltech36. Le graphe a été d’abord nettoyé pour ne garder que la plus grande composante connexe. Ensuite :
+
+1. **Louvain** a permis de partitionner le graphe en différentes communautés (0 à 7).
+2. Pour chaque communauté, on a identifié les valeurs **les plus fréquentes** (dominantes) parmi les attributs des nœuds suivants :
+   - `student_fac`
+   - `gender`
+   - `major_index`
+   - `dorm`
+   - `year`
+3. Les chiffres entre parenthèses représentent le **nombre de nœuds** dans la communauté ayant cette valeur.
+4. L'attribut **le plus représenté dans chaque communauté** est mis en **gras** pour mieux visualiser le facteur dominant.
+
+### Interprétation
+
+Ce tableau montre que dans toutes les communautés :
+- Le **student_fac** majoritaire est généralement `1`, ce qui indique une forte homogénéité sur ce critère.
+- Le **genre (gender)** dominant est systématiquement `2` (probablement féminin si codé ainsi).
+- Certains dortoirs (`dorm`) comme `169`, `166`, ou `168` apparaissent comme des points de regroupement majeurs.
+- L'année `2008` revient fréquemment, ce qui pourrait indiquer un regroupement fort des étudiants de cette promotion dans certaines communautés.
+
+> Cela permet d’interpréter les communautés comme étant structurées en grande partie par **faculté**, **genre**, **année**, et **résidence étudiante**, suggérant une forme de **homophilie** dans le réseau.
+
+Je refais la même chose pour le graphe Johns Hopkins55.gml pour voir si je retrouve des choses similaire:
+
+## Attributs dominants par communauté - JH
+
+![Louvain](JH_Louvain_community.png)
+## Attributs dominants par communauté (grand graphe, sans `student_fac`)
+
+| Communauté | gender           | major_index       | dorm             | year             |
+|------------|------------------|-------------------|------------------|------------------|
+| 0          | **2 (589)**       | 0 (159)            | **0 (746)**        | 2005 (342)         |
+| 1          | 2 (445)           | 0 (151)            | 51 (204)           | **2009 (839)**     |
+| 2          | **1 (387)**       | 155 (118)          | 0 (375)            | 2006 (210)         |
+| 3          | 2 (354)           | 0 (83)             | 52 (172)           | **2008 (581)**     |
+| 4          | 2 (310)           | **195 (114)**      | 0 (271)            | 2006 (171)         |
+| 5          | 2 (302)           | 195 (55)           | 0 (195)            | **2007 (428)**     |
+| 6          | **1 (134)**       | 166 (35)           | 0 (113)            | 2006 (75)          |
+| 7          | 2 (128)           | **217 (192)**      | 0 (139)            | 0 (46)             |
+| 8          | 2 (33)            | 155 (11)           | 0 (37)             | 2006 (16)          |
+
+On remarque une structure par année : Les communautés 1, 3 et 5 présentent une très forte cohésion temporelle, respectivement autour des promotions 2009, 2008 et 2007, ce qui montre une séparation nette entre les années étudiantes. 
+
+Gender : Certaines communautés ont une majorité de gender = 2 (souvent féminin), comme la 0, 1, 3, 4, 5, 7, 8. D'autres sont dominées par gender = 1 (souvent masculin), comme les communautés 2 et 6.
+
+Dorm: La valeur 0 est dominante dans la majorité des cas, ce qui pourrait soit représenter une donnée manquante ou ceux qui sont hors du campus. Les communautés 1 et 3 ont toutefois des dortoirs spécifiques (51, 52) très présents.
+
+Major_index : La communauté 7 est clairement structurée par la spécialisation académique, avec major_index = 217 dominant à 192 occurrences, ce qui est exceptionnellement fort pour cet attribut. C’est probablement une communauté académique cohésive.
+
+
+## **Conclusion:**
+    * Une forte cohésion temporelle dans certaines communautés (groupement par promotion).
+    * Une homogénéité de genre dans plusieurs groupes (certaines très féminines, d'autres masculines).
+    * Un effet de regroupement résidentiel dans quelques cas (dortoirs 51, 52, etc.).
+    * Des communautés académiques spécifiques, comme celle autour de major_index = 217.
